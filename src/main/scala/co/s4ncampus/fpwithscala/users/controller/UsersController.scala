@@ -39,10 +39,9 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
 
     private def findUserByLegalId(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
-            case req @ GET -> Root / id =>
-                //val user = s"$id"
+            case GET -> Root / id =>
+                val user = s"$id"
                 val action = for {
-                    user <- req.as[String]
                     result <- userService.findByLegalId(user).value
                 } yield result
 
