@@ -16,6 +16,12 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
       _ <- validation.doesNotExist(user)
       saved <- EitherT.liftF(repository.create(user))
     } yield saved
+
+  def findByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, User] =
+    for {
+      //_ <- validation.doesNotExist(new User(Some(10L),"","","","",""))
+      founded <- repository.findByLegalId(legalId)
+    } yield founded
 }
 
 object UserService{
