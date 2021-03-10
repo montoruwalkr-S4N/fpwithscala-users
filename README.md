@@ -4,7 +4,7 @@
 ### - Keiny Pacheco Carcamo tatianapacheco@seven4n.com
 ### - Esteban Gonzalez Peña estebangonzalez@seven4n.com
 ### - David Obando Gamboa davidobando@seven4n.com
-### - Alex Montoya Franco
+### - Alex Montoya Franco alexmontoya@seven4n.com
 
 ## Planeación
 
