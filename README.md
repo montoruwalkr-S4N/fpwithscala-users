@@ -1,7 +1,7 @@
 # Proyecto Final Curso Scala - S4N Campus
 
 ## Equipo 1
-### - Keiny Pacheco Carcamo
+### - Keiny Pacheco Carcamo tatianapacheco@seven4n.com
 ### - Esteban Gonzalez Peña estebangonzalez@seven4n.com
 ### - David Obando Gamboa davidobando@seven4n.com
 ### - Alex Montoya Franco
