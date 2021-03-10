@@ -1,12 +1,12 @@
 package co.s4ncampus.fpwithscala.users.infraestructure.repository
 
 import co.s4ncampus.fpwithscala.users.domain._
-
 import cats.data._
 import cats.syntax.all._
 import doobie._
 import doobie.implicits._
 import cats.effect.Bracket
+import cats.implicits.toFoldableOps
 
 
 private object UserSQL {
@@ -36,6 +36,11 @@ private object UserSQL {
     WHERE LEGAL_ID = $legalId
   """.query[User]
 
+  def listAll():ConnectionIO[List[User]] = sql"""
+    SELECT ID, LEGAL_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE
+    FROM USERS
+  """.query[User].to[List]
+
 }
 
 class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Transactor[F])
@@ -60,6 +65,12 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     * 
     */
   def findByLegalId(legalId: String): OptionT[F, User] = OptionT(selectByLegalId(legalId).option.transact(xa))
+
+  /**
+    * @todo completar findAll
+    * @return
+    */
+  def findAll(): F[List[User]] = listAll().map( x => x).transact(xa)
 
 }
 

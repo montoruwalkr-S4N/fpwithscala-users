@@ -22,6 +22,15 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
       //_ <- validation.doesNotExist(new User(Some(10L),"","","","",""))
       founded <- repository.findByLegalId(legalId)
     } yield founded
+
+  /**
+    * @todo completar findAll
+    * @return
+    */
+  def findAll()(implicit M: Monad[F]): F[List[User]] =
+    for {
+      allElements <- repository.findAll()
+    }yield allElements
 }
 
 object UserService{

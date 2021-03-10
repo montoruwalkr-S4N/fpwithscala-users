@@ -18,6 +18,12 @@ trait UserRepositoryAlgebra[F[_]] {
   def findByLegalId(legalId: String): OptionT[F, User]
 
   /**
+    * @todo completar findAll
+    * @return
+    */
+  def findAll(): F[List[User]]
+
+  /**
     * @todo delete
     * @todo update
     */
