@@ -18,6 +18,11 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
 
     implicit val userDecoder: EntityDecoder[F, User] = jsonOf
 
+    /**
+      * Se encarga de manejar las peticiones de creación de usuario
+      * @param userService Objeto tipo UserService
+      * @return
+      */
     private def createUser(userService: UserService[F]): HttpRoutes[F] = 
         HttpRoutes.of[F] {
             case req @ POST -> Root =>
@@ -32,11 +37,15 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 }
         }
 
+    /**
+      * Se definen los métodos del endpoint por su tipo
+      * @param userService Objeto tipo UserService
+      * @return Lista de endpoints
+      */
     def endpoints(userService: UserService[F]): HttpRoutes[F] = {
         //To convine routes use the function `<+>`
         createUser(userService)
     }
-
 }
 
 object UsersController {
