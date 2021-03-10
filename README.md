@@ -3,7 +3,7 @@
 ## Equipo 1
 ### - Keiny Pacheco Carcamo
 ### - Esteban Gonzalez Peña estebangonzalez@seven4n.com
-### - David Obando Gamboa
+### - David Obando Gamboa davidobando@seven4n.com
 ### - Alex Montoya Franco
 
 ## Planeación
