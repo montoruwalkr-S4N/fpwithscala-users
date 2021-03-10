@@ -2,7 +2,7 @@
 
 ## Equipo 1
 ### - Keiny Pacheco Carcamo
-### - Esteban Gonzalez Peña
+### - Esteban Gonzalez Peña estebangonzalez@seven4n.com
 ### - David Obando Gamboa
 ### - Alex Montoya Franco
 
