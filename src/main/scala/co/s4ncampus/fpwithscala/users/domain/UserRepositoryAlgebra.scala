@@ -5,7 +5,7 @@ import cats.data.OptionT
 trait UserRepositoryAlgebra[F[_]] {
   /**
     * Definición del comportamiento de cración de Users
-    * @param user
+    * @param user Objeto de tipo User
     * @return Promesa de creación de User
     */
   def create(user: User): F[User]
@@ -23,9 +23,21 @@ trait UserRepositoryAlgebra[F[_]] {
     */
   def findAll(): F[List[User]]
 
-
+  /**
+    * Definición del comportamiento de actualización de un usuario
+    *
+    * @param legalId Documento de identificación del usuario
+    * @param user Objeto de tipo User
+    * @return Promesa de código correspondiente a la cantidad de filas afectadas
+    */
   def updateUser(legalId:String, user: User): F[Int]
 
+  /**
+    * Definición del comportamiento de eliminación de un usuario
+    *
+    * @param legalId Documento de identificación del usuario
+    * @return Promesa de código correspondiente a la cantidad de filas afectadas
+    */
   def deleteByLegalId(legalId: String) : F[Int]
 
 }

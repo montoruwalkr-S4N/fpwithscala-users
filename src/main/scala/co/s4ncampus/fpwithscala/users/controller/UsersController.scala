@@ -71,10 +71,16 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 action.flatMap {
                     case Some(List()) => Conflict(s"There is no users in the db")
                     case Some(saved) => Ok(saved.asJson)
-                    case None => Conflict(s"There is no users in the db")
+                    case None => Conflict(s"An unexpected error has occurred")
                 }
         }
 
+    /**
+      * Se encarga de manejar las peticiones de actualización de usuarios en la base de datos
+      *
+      * @param userService Objeto tipo UserService
+      * @return Mensaje de operacion exitosa con codigo 1 y de operacion no exitosa con codigo 0
+      */
     private def updateUser(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
             case req@PUT -> Root / legalId =>
@@ -84,22 +90,29 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 } yield result
 
                 action.flatMap {
-                    case Some(saved) if saved == 1 => Ok(s"Se actualizó correctamente $saved usuario")
-                    case Some(saved) if saved == 0 => Ok(s"No existe usuario con el legal Id $legalId")
+                    case Some(saved) if saved == 1 => Ok(s"User with $legalId has been succesfully updated")
+                    case Some(saved) if saved == 0 => Conflict(s"There is no such a user with legal id $legalId in the db")
+                    case None => Conflict(s"An unexpected error has occurred")
                 }
         }
 
+    /**
+      * Se encarga de manejar las peticiones de borrado de usuarios en la base de datos
+      *
+      * @param userService Objeto tipo UserService
+      * @return Mensaje de operacion exitosa con codigo 1 y de operacion no exitosa con codigo 0
+      */
     private def deleteByLegalId(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
-            case DELETE -> Root / id =>
-                val user = s"$id"
+            case DELETE -> Root / legalId =>
+                val user = s"$legalId"
                 val action = for {
                     result <- userService.deleteByLegalId(user).value
                 } yield result
                 action.flatMap {
-                    case Some(saved) if saved == 1 => Ok(s"Se eliminó correctamente $saved usuario")
-                    case Some(saved) if saved == 0 => Ok("No existe usuario con ese id")
-                    case None => Conflict(s"The user with legal id $id does not exists")
+                    case Some(saved) if saved == 1 => Ok(s"User with $legalId has been succesfully deleted")
+                    case Some(saved) if saved == 0 => Conflict(s"There is no such a user with legal id $legalId in the db")
+                    case None => Conflict(s"An unexpected error has occurred")
                 }
 
         }

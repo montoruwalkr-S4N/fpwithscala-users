@@ -23,7 +23,7 @@ private object UserSQL {
   """.update
 
   /**
-    * Buscar usuario usando el legalId
+    * Busca usuario usando el legalId
     *
     * @param legalId   String que representa el legal id del usuario
     * @return          Objeto de tipo User
@@ -36,7 +36,7 @@ private object UserSQL {
   """.query[User]
 
   /**
-    * Buscar todos los usuarios de la tabla USERS
+    * Busca todos los usuarios de la tabla USERS
     *
     * @return ConnectionIO de lista de usuarios
     */
@@ -45,12 +45,24 @@ private object UserSQL {
     FROM USERS
   """.query[User].to[List]
 
-
+  /**
+    * Actualiza un usuario de la tabla USERS
+    *
+    * @param legalId String que representa el legal id del usuario
+    * @param user Objeto de tipo User
+    * @return Filas afectadas en la base de datos
+    */
   def update(legalId:String, user: User): Update0 = sql"""
     UPDATE USERS SET FIRST_NAME = ${user.firstName}, LAST_NAME = ${user.lastName}, EMAIL =${user.email}, PHONE =  ${user.phone}
     WHERE LEGAL_ID = $legalId
     """.update
 
+  /**
+    * Elimina un usuario de la tabla USERS
+    *
+    * @param legallId String que representa el legal id del usuario
+    * @return Filas afectadas en la base de datos
+    */
   def removeByLegalId(legallId: String): Update0 = sql"""
     DELETE
     FROM USERS
@@ -75,23 +87,36 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     insert(user).withUniqueGeneratedKeys[Long]("ID").map(id => user.copy(id = id.some)).transact(xa)
 
   /**
-    * Busca un usuario por el legal id en la base de datos
+    * Busca un usuario por el Legal Id en la base de datos
     *
     * @param legalId  String que representa el legal id del usuario
-    * @return         Promesa de retornar un valor o el Usuario que cumple con el parametro de legalId
+    * @return         Resultado de la query (filas afectadas en la base de datos)
     * 
     */
   def findByLegalId(legalId: String): OptionT[F, User] = OptionT(selectByLegalId(legalId).option.transact(xa))
+
   /**
-    * Buscar todos los usuarios en la base de datos
+    * Busca todos los usuarios en la base de datos
     *
-    *  @return Promesa de retorno de lista
+    *  @return Resultado de la query (filas afectadas en la base de datos)
     */
   def findAll(): F[List[User]] = listAll().transact(xa)
 
-
+  /**
+    * Actualiza un usuario por el Legal Id en la base de datos
+    *
+    * @param legalId String que representa el legal id del usuario
+    * @param user Objeto de tipo User
+    * @return Resultado de la query (filas afectadas en la base de datos)
+    */
   def updateUser(legalId:String, user: User): F[Int]= update(legalId, user).run.transact(xa)
 
+  /**
+    * Elimina un usuario por el Legal Id en la base de datos
+    *
+    * @param legalId String que representa el legal id del usuario
+    * @return Resultado de la query (filas afectadas en la base de datos)
+    */
   def deleteByLegalId(legalId: String): F[Int] = removeByLegalId(legalId).run.transact(xa)
 
 }

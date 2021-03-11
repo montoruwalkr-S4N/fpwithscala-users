@@ -38,12 +38,24 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
       allElements <- OptionT.liftF(repository.findAll())
     } yield allElements
 
-
+  /**
+    * Actualiza usuario usando como parámetro el Legal id introducido por el usuario
+    *
+    * @param legalId Parámetro de búsqueda
+    * @param user Objeto de tipo User
+    * @param M Monada implicita
+    */
   def updateUser(legalId: String, user: User)(implicit M: Monad[F]): OptionT[F, Int] =
     for {
       saved <- OptionT.liftF(repository.updateUser(legalId, user))
     } yield saved
 
+  /**
+    * Elimina usuario usando como parámetro el Legal id introducido por el usuario
+    *
+    * @param legalId Parámetro de búsqueda
+    * @param M Monada implicita
+    */
   def deleteByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, Int] = {
     for {
       toDelete <- OptionT.liftF(repository.deleteByLegalId(legalId))
