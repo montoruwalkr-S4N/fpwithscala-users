@@ -21,9 +21,9 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
     /**
       * Se encarga de manejar las peticiones de creación de usuario
       * @param userService Objeto tipo UserService
-      * @return
+      * @return Right si el objeto se ha guardado correctamente y Left en caso deue 
       */
-    private def createUser(userService: UserService[F]): HttpRoutes[F] = 
+    private def createUser(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
             case req @ POST -> Root =>
                 val action = for {
@@ -37,7 +37,11 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 }
         }
 
-        
+    /**
+     * Se encarga de manejar las peticiones de búsqueda por parámetro
+     * @param userService Objeto tipo UserService
+     * @return OptionT de Some si se encontró el usuario o un None si no se encontró el objeto
+     */
     private def findUserByLegalId(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
             case GET -> Root / id =>
@@ -51,8 +55,12 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                     case None => Conflict(s"The user with legal id $id does not exists")
                 }
         }
-        
 
+    /**
+      * Se encarga de manejar las peticiones de búsqueda para todos los usuarios sin parámetros
+      * @param userService Objeto tipo UserService
+      * @return OptionT de Some(List()) si no hay usuarios, un Some() si se encontró usuarios o un None si no se encontró algo
+      */
     private def findAll(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
             case GET -> Root =>
@@ -75,7 +83,6 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
     def endpoints(userService: UserService[F]): HttpRoutes[F] = {
         //To convine routes use the function `<+>`
         createUser(userService) <+> findUserByLegalId(userService) <+> findAll(userService)
-        //createUser(userService) <+> findAll(userService)
     }
 }
 

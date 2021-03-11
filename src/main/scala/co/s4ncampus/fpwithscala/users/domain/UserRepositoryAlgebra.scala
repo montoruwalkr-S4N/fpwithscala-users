@@ -11,15 +11,15 @@ trait UserRepositoryAlgebra[F[_]] {
   def create(user: User): F[User]
 
   /**
-    * Deficinición del comportamiento de busqueda de usuario
+    * Definición del comportamiento de busqueda de usuario por parámetro
     * @param legalId Documento de identificación del usuario
-    * @return
+    * @return Un OptionT con Some si existen datos o None en caso contrario
     */
   def findByLegalId(legalId: String): OptionT[F, User]
 
   /**
-    * @todo completar findAll
-    * @return
+    * Definición del comportamiento de búsqueda de todos los usuarios
+    * @return Promesa de retorno de lista
     */
   def findAll(): F[List[User]]
 

@@ -17,14 +17,21 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
       saved <- EitherT.liftF(repository.create(user))
     } yield saved
 
+  /**
+    * Realiza una búsqueda a Users usando como parámetro el Legal Id introducido por el usuario
+    * @param legalId Parámetro de búsqueda
+    * @param M Mónada implícita
+    * @return Objeto de tipo User que cumpla con la búsqueda
+    */
   def findByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, User] =
     for {
       founded <- repository.findByLegalId(legalId)
     } yield founded
 
   /**
-    * @todo completar findAll
-    * @return
+    * Lista todos los usuarios de la base de datos
+    * @param M Mónada implícita
+    * @return Lista de objetos de tipo User. En caso de que no exístan datos, se retorna lista vacía
     */
   def findAll()(implicit M: Monad[F]): OptionT[F, List[User]] =
     for {

@@ -35,11 +35,15 @@ private object UserSQL {
     WHERE LEGAL_ID = $legalId
   """.query[User]
 
+  /**
+    * Buscar todos los usuarios de la tabla USERS
+    *
+    * @return ConnectionIO de lista de usuarios
+    */
   def listAll(): ConnectionIO[List[User]] = sql"""
     SELECT ID, LEGAL_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE
     FROM USERS
   """.query[User].to[List]
-
 }
 
 class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Transactor[F])
@@ -60,14 +64,15 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     * Busca un usuario por el legal id en la base de datos
     *
     * @param legalId  String que representa el legal id del usuario
-    * @return         Promesa de retornar un valor o eñ Usuario que cumple con el parametro de legalId
+    * @return         Promesa de retornar un valor o el Usuario que cumple con el parametro de legalId
     * 
     */
   def findByLegalId(legalId: String): OptionT[F, User] = OptionT(selectByLegalId(legalId).option.transact(xa))
 
   /**
-    * @todo completar findAll
-    * @return
+    * Buscar todos los usuarios en la base de datos
+    *
+    *  @return Promesa de retorno de lista
     */
   def findAll(): F[List[User]] = listAll().transact(xa)
 
