@@ -44,6 +44,11 @@ private object UserSQL {
     SELECT ID, LEGAL_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE
     FROM USERS
   """.query[User].to[List]
+
+  def update(id:Long, user: User): Update0 = sql"""
+    UPDATE USERS SET LEGAL_ID = ${user.legalId}, FIRST_NAME = ${user.firstName}, LAST_NAME = ${user.lastName}, EMAIL =${user.email}, PHONE =  ${user.phone}
+    WHERE ID = $id
+  """.update
 }
 
 class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Transactor[F])
@@ -75,6 +80,10 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     *  @return Promesa de retorno de lista
     */
   def findAll(): F[List[User]] = listAll().transact(xa)
+
+  def updateUser(id:Long, user: User): F[User] = update(id, user).withUniqueGeneratedKeys[Long]("ID").map(id => user.copy(id = id.some)).transact(xa)
+
+
 
 }
 

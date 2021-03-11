@@ -37,6 +37,14 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
     for {
       allElements <- OptionT.liftF(repository.findAll())
     } yield allElements
+
+
+  def updateUser(id:Long, user: User)(implicit M: Monad[F]): OptionT[F, User] =
+    for {
+      saved <- OptionT.liftF(repository.updateUser(id, user))
+    } yield saved
+
+
 }
 
 object UserService{

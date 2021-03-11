@@ -23,6 +23,8 @@ trait UserRepositoryAlgebra[F[_]] {
     */
   def findAll(): F[List[User]]
 
+  def updateUser(id:Long, user: User): F[User]
+
   /**
     * @todo delete
     * @todo update
