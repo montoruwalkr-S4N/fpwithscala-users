@@ -37,6 +37,12 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
     for {
       allElements <- OptionT.liftF(repository.findAll())
     } yield allElements
+
+  def deleteByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, Int] = {
+    for {
+      toDelete <- OptionT.liftF(repository.deleteByLegalId(legalId))
+    } yield toDelete
+  }
 }
 
 object UserService{
