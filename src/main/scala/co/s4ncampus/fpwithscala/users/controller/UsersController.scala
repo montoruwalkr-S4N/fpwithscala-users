@@ -77,16 +77,15 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
 
     private def updateUser(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
-            case req @ PUT -> Root / id=>
+            case req @ PUT -> Root / legalId=>
                 val action = for {
                     user <- req.as[User]
-                    result <- userService.updateUser(id.toLong, user).value
+                    result <- userService.updateUser(legalId.toString, user).value
                 } yield result
 
                 action.flatMap {
-                    case Some(saved) => Ok(saved.asJson)
-                    case  => Conflict(s"The user with id $id does not exists")
-                    case None => Conflict(s"The user with id $id does not exists")
+                    case Some(saved) if saved == 1 => Ok(s"Se actualizó correctamente $saved usuario")
+                    case Some(saved) if saved == 0 => Ok(s"No existe usuario con el legal Id $legalId")
                 }
         }
 
