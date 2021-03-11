@@ -37,6 +37,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 }
         }
 
+        
     private def findUserByLegalId(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
             case GET -> Root / id =>
@@ -50,6 +51,21 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                     case None => Conflict(s"The user with legal id $id does not exists")
                 }
         }
+        
+
+    private def findAll(userService: UserService[F]): HttpRoutes[F] =
+        HttpRoutes.of[F] {
+            case GET -> Root =>
+                val action = for {
+                    result <- userService.findAll().value
+                } yield result
+
+                action.flatMap {
+                    case Some(List()) => Conflict(s"There is no users in the db")
+                    case Some(saved) => Ok(saved.asJson)
+                    case None => Conflict(s"There is no users in the db")
+                }
+        }
 
     /**
       * Se definen los métodos del endpoint por su tipo
@@ -58,7 +74,8 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
       */
     def endpoints(userService: UserService[F]): HttpRoutes[F] = {
         //To convine routes use the function `<+>`
-        createUser(userService) <+> findUserByLegalId(userService)
+        createUser(userService) <+> findUserByLegalId(userService) <+> findAll(userService)
+        //createUser(userService) <+> findAll(userService)
     }
 }
 

@@ -19,7 +19,6 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
 
   def findByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, User] =
     for {
-      //_ <- validation.doesNotExist(new User(Some(10L),"","","","",""))
       founded <- repository.findByLegalId(legalId)
     } yield founded
 
@@ -27,10 +26,10 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
     * @todo completar findAll
     * @return
     */
-  def findAll()(implicit M: Monad[F]): F[List[User]] =
+  def findAll()(implicit M: Monad[F]): OptionT[F, List[User]] =
     for {
-      allElements <- repository.findAll()
-    }yield allElements
+      allElements <- OptionT.liftF(repository.findAll())
+    } yield allElements
 }
 
 object UserService{
