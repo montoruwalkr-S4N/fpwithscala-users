@@ -109,7 +109,7 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     * @param user Objeto de tipo User
     * @return Resultado de la query (filas afectadas en la base de datos)
     */
-  def updateUser(legalId:String, user: User): F[Int]= update(legalId, user).run.transact(xa)
+  def updateUser(legalId:String, user: User): F[Boolean]= update(legalId, user).run.transact(xa).map(row => row ==1)
 
   /**
     * Elimina un usuario por el Legal Id en la base de datos

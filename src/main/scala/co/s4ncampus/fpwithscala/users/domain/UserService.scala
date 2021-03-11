@@ -45,7 +45,7 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
     * @param user Objeto de tipo User
     * @param M Monada implicita
     */
-  def updateUser(legalId: String, user: User)(implicit M: Monad[F]): OptionT[F, Int] =
+  def updateUser(legalId: String, user: User)(implicit M: Monad[F]): OptionT[F, Boolean] =
     for {
       saved <- OptionT.liftF(repository.updateUser(legalId, user))
     } yield saved
