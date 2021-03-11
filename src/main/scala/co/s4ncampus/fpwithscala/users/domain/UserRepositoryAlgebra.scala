@@ -23,10 +23,9 @@ trait UserRepositoryAlgebra[F[_]] {
     */
   def findAll(): F[List[User]]
 
+
   def updateUser(legalId:String, user: User): F[Int]
 
-  /**
-    * @todo delete
-    * @todo update
-    */
+  def deleteByLegalId(legalId: String) : F[Int]
+
 }

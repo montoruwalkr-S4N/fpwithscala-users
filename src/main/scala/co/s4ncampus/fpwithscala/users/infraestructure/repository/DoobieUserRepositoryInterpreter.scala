@@ -45,11 +45,20 @@ private object UserSQL {
     FROM USERS
   """.query[User].to[List]
 
+
   def update(legalId:String, user: User): Update0 = sql"""
     UPDATE USERS SET FIRST_NAME = ${user.firstName}, LAST_NAME = ${user.lastName}, EMAIL =${user.email}, PHONE =  ${user.phone}
     WHERE LEGAL_ID = $legalId
+    """.update
+
+  def removeByLegalId(legallId: String): Update0 = sql"""
+    DELETE
+    FROM USERS
+    WHERE LEGAL_ID = $legallId
   """.update
 }
+
+
 
 class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Transactor[F])
     extends UserRepositoryAlgebra[F] {
@@ -73,28 +82,17 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     * 
     */
   def findByLegalId(legalId: String): OptionT[F, User] = OptionT(selectByLegalId(legalId).option.transact(xa))
-
   /**
     * Buscar todos los usuarios en la base de datos
     *
     *  @return Promesa de retorno de lista
     */
   def findAll(): F[List[User]] = listAll().transact(xa)
-/**
-  def updateUser(legalId:String, user: User): F[Either[UserDoesNotExistsError.type,User]]= update(legalId, user).run.transact(xa).map { affectedRows =>
-    if(affectedRows == 1){
-      Right(user.copy(legalId = legalId))
-    }else {
-      Left(UserDoesNotExistsError)
-    }
-
-  }
-  */
-
-def updateUser(legalId:String, user: User): F[Int]= update(legalId, user).run.transact(xa)
 
 
+  def updateUser(legalId:String, user: User): F[Int]= update(legalId, user).run.transact(xa)
 
+  def deleteByLegalId(legalId: String): F[Int] = removeByLegalId(legalId).run.transact(xa)
 
 }
 
