@@ -1,3 +1,5 @@
+import sbt.enablePlugins
+
 val CatsVersion = "2.2.0"
 val Http4sVersion = "0.21.16"
 val CirceVersion = "0.13.0"
@@ -16,6 +18,8 @@ lazy val root = (project in file("."))
     name := "users",
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "2.13.0",
+    mainClass in Compile := Some("co.s4ncampus.fpwithscala.users.Main"),
+
     libraryDependencies ++= Seq(
       "org.typelevel"   %% "cats-core"            % CatsVersion,
       "org.http4s"      %% "http4s-blaze-server"  % Http4sVersion,
@@ -41,4 +45,5 @@ lazy val root = (project in file("."))
     addCompilerPlugin("org.typelevel" %% "kind-projector"     % "0.10.3"),
     addCompilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1"),
     testFrameworks += new TestFramework("munit.Framework")
-  )
+  ) enablePlugins(JavaAppPackaging)
+    enablePlugins(DockerPlugin)
