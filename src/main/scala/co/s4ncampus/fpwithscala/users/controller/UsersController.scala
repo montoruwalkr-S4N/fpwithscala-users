@@ -79,7 +79,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
       * Se encarga de manejar las peticiones de actualización de usuarios en la base de datos
       *
       * @param userService Objeto tipo UserService
-      * @return Mensaje de operacion exitosa con codigo 1 y de operacion no exitosa con codigo 0
+      * @return Confirmación de actualización exitosa de usuario
       */
     private def updateUser(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
@@ -90,8 +90,8 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 } yield result
 
                 action.flatMap {
-                    case Some(saved) if saved == true => Ok(s"User with $legalId has been succesfully updated")
-                    case Some(saved) if saved == false => Conflict(s"There is no such a user with legal id $legalId in the db")
+                    case Some(true) => Ok(s"User with $legalId has been succesfully updated")
+                    case Some(false)=> Conflict(s"There is no such a user with legal id $legalId in the db")
                     case None => Conflict(s"An unexpected error has occurred")
                 }
         }
@@ -100,7 +100,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
       * Se encarga de manejar las peticiones de borrado de usuarios en la base de datos
       *
       * @param userService Objeto tipo UserService
-      * @return Mensaje de operacion exitosa con codigo 1 y de operacion no exitosa con codigo 0
+      * @return Confirmación de eliminación exitosa de usuario
       */
     private def deleteByLegalId(userService: UserService[F]): HttpRoutes[F] =
         HttpRoutes.of[F] {
@@ -110,8 +110,8 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                     result <- userService.deleteByLegalId(user).value
                 } yield result
                 action.flatMap {
-                    case Some(saved) if saved == 1 => Ok(s"User with $legalId has been succesfully deleted")
-                    case Some(saved) if saved == 0 => Conflict(s"There is no such a user with legal id $legalId in the db")
+                    case Some(true) => Ok(s"User with $legalId has been succesfully deleted")
+                    case Some(false)=> Conflict(s"There is no such a user with legal id $legalId in the db")
                     case None => Conflict(s"An unexpected error has occurred")
                 }
 
@@ -123,7 +123,6 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
       * @return Lista de endpoints
       */
     def endpoints(userService: UserService[F]): HttpRoutes[F] = {
-        //To convine routes use the function `<+>`
         createUser(userService) <+> findUserByLegalId(userService) <+> findAll(userService) <+> updateUser(userService) <+> deleteByLegalId(userService)
     }
 }

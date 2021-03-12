@@ -28,7 +28,7 @@ trait UserRepositoryAlgebra[F[_]] {
     *
     * @param legalId Documento de identificación del usuario
     * @param user Objeto de tipo User
-    * @return Promesa de código correspondiente a la cantidad de filas afectadas
+    * @return Promesa de actualización exitosa o fallida
     */
   def updateUser(legalId:String, user: User):  F[Boolean]
 
@@ -36,8 +36,8 @@ trait UserRepositoryAlgebra[F[_]] {
     * Definición del comportamiento de eliminación de un usuario
     *
     * @param legalId Documento de identificación del usuario
-    * @return Promesa de código correspondiente a la cantidad de filas afectadas
+    * @return Promesa de eliminación exitosa o fallida
     */
-  def deleteByLegalId(legalId: String) : F[Int]
+  def deleteByLegalId(legalId: String) : F[Boolean]
 
 }

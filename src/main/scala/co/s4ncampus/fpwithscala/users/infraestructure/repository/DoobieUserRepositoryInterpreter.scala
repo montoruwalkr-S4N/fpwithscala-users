@@ -117,7 +117,7 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     * @param legalId String que representa el legal id del usuario
     * @return Resultado de la query (filas afectadas en la base de datos)
     */
-  def deleteByLegalId(legalId: String): F[Int] = removeByLegalId(legalId).run.transact(xa)
+  def deleteByLegalId(legalId: String): F[Boolean] = removeByLegalId(legalId).run.transact(xa).map(row => row ==1)
 
 }
 
