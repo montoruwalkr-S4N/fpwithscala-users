@@ -33,7 +33,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
 
                 action.flatMap {
                     case Right(saved) => Ok(saved.asJson)
-                    case Left(UserAlreadyExistsError(existing)) => NotFound(s"The user with legal id ${existing.legalId} already exists")
+                    case Left(UserAlreadyExistsError(existing)) => Conflict(s"The user with legal id ${existing.legalId} already exists")
                 }
         }
 
@@ -90,7 +90,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 } yield result
 
                 action.flatMap {
-                    case Some(true) => Ok(s"User with $legalId has been succesfully updated")
+                    case Some(true) => Ok(s"User with legal id $legalId has been succesfully updated")
                     case Some(false)=> Conflict(s"There is no such a user with legal id $legalId in the db")
                     case None => Conflict(s"An unexpected error has occurred")
                 }
@@ -110,7 +110,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                     result <- userService.deleteByLegalId(user).value
                 } yield result
                 action.flatMap {
-                    case Some(true) => Ok(s"User with $legalId has been succesfully deleted")
+                    case Some(true) => Ok(s"User with legal id $legalId has been succesfully deleted")
                     case Some(false)=> Conflict(s"There is no such a user with legal id $legalId in the db")
                     case None => Conflict(s"An unexpected error has occurred")
                 }
