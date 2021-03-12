@@ -110,8 +110,8 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                     result <- userService.deleteByLegalId(user).value
                 } yield result
                 action.flatMap {
-                    case Some(saved) if saved == 1 => Ok(s"User with $legalId has been succesfully deleted")
-                    case Some(saved) if saved == 0 => Conflict(s"There is no such a user with legal id $legalId in the db")
+                    case Some(saved) => Ok(saved.asJson)
+                    //case Some(saved) => Conflict(s"There is no such a user with legal id $legalId in the db")
                     case None => Conflict(s"An unexpected error has occurred")
                 }
 
