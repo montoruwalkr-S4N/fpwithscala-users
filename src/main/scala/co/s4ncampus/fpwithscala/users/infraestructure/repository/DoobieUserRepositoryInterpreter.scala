@@ -119,6 +119,7 @@ class DoobieUserRepositoryInterpreter[F[_]: Bracket[?[_], Throwable]](val xa: Tr
     */
   def deleteByLegalId(legalId: String): F[Boolean] = removeByLegalId(legalId).run.transact(xa).map(row => row ==1)
 
+
 }
 
 object DoobieUserRepositoryInterpreter {

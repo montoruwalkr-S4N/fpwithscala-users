@@ -33,7 +33,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
 
                 action.flatMap {
                     case Right(saved) => Ok(saved.asJson)
-                    case Left(UserAlreadyExistsError(existing)) => Conflict(s"The user with legal id ${existing.legalId} already exists")
+                    case Left(UserAlreadyExistsError(existing)) => NotFound(s"The user with legal id ${existing.legalId} already exists")
                 }
         }
 

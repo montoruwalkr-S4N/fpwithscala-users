@@ -56,11 +56,11 @@ class UserService[F[_]](repository: UserRepositoryAlgebra[F], validation: UserVa
     * @param legalId Parámetro de búsqueda
     * @param M Monada implicita
     */
-  def deleteByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, Boolean] = {
+  def deleteByLegalId(legalId:String)(implicit M: Monad[F]): OptionT[F, Boolean] =
     for {
       toDelete <- OptionT.liftF(repository.deleteByLegalId(legalId))
     } yield toDelete
-  }
+
 }
 
 object UserService{
