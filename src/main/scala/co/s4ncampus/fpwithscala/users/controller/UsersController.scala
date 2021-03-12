@@ -90,7 +90,7 @@ class UsersController[F[_]: Sync] extends Http4sDsl[F] {
                 } yield result
 
                 action.flatMap {
-                    case Some(true) => Ok(s"User with legal id $legalId has been succesfully updated")
+                    case Some(true) => Ok(req.asJson)
                     case Some(false)=> Conflict(s"There is no such a user with legal id $legalId in the db")
                     case None => Conflict(s"An unexpected error has occurred")
                 }
